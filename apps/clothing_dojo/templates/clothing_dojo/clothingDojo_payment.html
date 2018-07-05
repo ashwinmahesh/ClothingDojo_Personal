@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Clothing Dojo Payment Page</title>
+    {% load static %}
+    <link rel='stylesheet' type='text/css' href='{% static 'clothing_dojo/css/cdCheckoutHeaderCSS.css' %}'>
+    <link rel='stylesheet' type='text/css' href='{% static 'clothing_dojo/css/cdCheckoutCSS.css' %}'>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href='{% static 'clothing_dojo/css/proxima_nova/fonts/fonts.css' %}'/>
+    <script src="https://js.stripe.com/v2/" type='text/javascript'></script>
+    <script>
+        Stripe.publishableKey='{{publishable}}';
+    </script>
+    <script>
+        $(document).ready(function(){
+            $('#turn_in').click(function(){
+                
+                var form=$('#payment_form');
+                var card={
+                    number:$('#cardNumber').val(),
+                    expMonth:$('#expMonth').val(),
+                    expYear:$('#expYear').val(),
+                    cvc:$('#cvv').val()
+                };
+
+                Stripe.createToken(card, function(status, response){
+                    if(status===200){
+                        console.log(status, response);
+                        $('.red').hide();
+                        token=response.id
+                        console.log('Token: '+token)
+                        $('#stripe_id').val(token)
+                        console.log('Value: ' + $('#stripe_id').val());
+                        $('#payment_form').submit();
+                        console.log('After submit')
+                        console.log($('#payment_form'))
+                    }
+                    else{
+                        $('#stripe-error-message').text(response.error.message);
+                        $('#credit-card-errors').show()
+                        $('#submit').attr('disabled', false)
+                    }
+                });
+                return false;
+            })
+        });
+    </script>
+</head>
+</head>
+<body>
+    <div class='wrapper'>
+        <div class='header'>
+            <img src='{% static 'clothing_admin/images/logo.png' %}'>
+            <p class='title'>Clothing Dojo</p>
+        </div>
+        <div class='navbar'>
+            <a class='cart' href='/cart/'><img src='{% static 'clothing_dojo/images/cart.png' %}' alt='Cart'></a>
+            <a class='orders' href='/viewOrders/'>ORDERS</a>
+            <a class='platform' href='/logout/'>LOG OUT</a>
+            <p>Welcome, {{user.first_name}}</p>
+        </div>
+
+        <div class='body'>
+            <div class='anchor'>
+                <a href='/cart/'>BACK</a>
+            </div>
+            <div class='rest_of_body'>
+            <div class='order_summary'>
+                <div class='right'>
+                    <p class='big'>Order Summary</p>
+                    <p>Subtotal ({{count}} items): ${{cart.total}}</p>
+                    <ul>
+                    {% for item in cart.items.all %}
+                        <li>{{item.product.name}}, {{item.size}}</li>
+                    {% endfor %}
+                    </ul>  
+                    <p>Shipping: FREE</p>
+                    <p>Tax: NONE</p>
+                    <p class='medium'>Total: ${{cart.total}}</p>
+                </div>
+            </div>
+
+           
+            <form id='payment_form' action='/processPayment/' method='post'>
+                {% csrf_token %}
+
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xs-12 col-md-4">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">
+                                        Payment Details
+                                    </h3>
+                                </div>
+                                <div class="panel-body">
+                                    <form role="form">
+                                        <div id='credit-card-errors'>
+                                            <p class='red' id='stripe-error-message'></p>
+                                        </div>
+                                    <div class="form-group">
+                                        <label for="cardNumber">
+                                            CARD NUMBER</label>
+                                        <div class="input-group">
+                                            <input name='card_number' type="text" class="form-control" id="cardNumber" placeholder="Valid Card Number"
+                                                autofocus />
+                                            <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+                                        </div>
+                                        
+                                        {% for message in card_fail %}
+                                        <p class='red'>{{message}}</p>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-7 col-md-7">
+                                            <div class="form-group">
+                                                <p class='exp'>EXPIRATION DATE</p>
+                                                <div class="col-xs-6 col-lg-6 pl-ziro">
+                                                    <input name='exp_month' type="text" class="form-control input_2" id="expMonth" placeholder="MM" maxlength="2" max='12' min='1'/>
+                                                </div>
+                                                <div class="col-xs-6 col-lg-6 pl-ziro">
+                                                    <input name='exp_year' type="text" class="form-control input_2" id="expYear" placeholder="YY" maxlength="2" /></div>
+                                                    <input type='hidden' name='stripe_id' id='stripe_id' value='17'>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-5 col-md-5 pull-right">
+                                            <div class="form-group">
+                                                <label for="cvCode">
+                                                    CV CODE</label>
+                                                <input name='cvv' type="password" class="form-control" id="cvv" placeholder="CV"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% for message in month_fail %}
+                                        <p class='red'>{{message}}</p>
+                                    {% endfor %}
+                                    {% for message in year_fail %}
+                                        <p class='red'>{{message}}</p>
+                                    {% endfor %}
+                                    {% for message in cvv_fail %}
+                                        <p class='red'>{{message}}</p>
+                                    {% endfor %}
+                                    </form>
+                                </div>
+                            </div>
+                            <ul class="nav nav-pills nav-stacked">
+                                <li class="active"><a href="#"><span class="badge pull-right"><span class="glyphicon glyphicon-usd"></span>{{cart.total}}</span> Final Payment</a>
+                                </li>
+                            </ul>
+                            <br/>
+                            <input id='turn_in' type='submit' class='btn btn-success btn-lg btn-block' role='button' value='Pay'>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            </div>
+        </div>
+        
+
+        <div class='footer'>
+            <p>Created by Ashwin Mahesh</p>
+            <p>*DISCLAIMER: Not a real e-commerce website*</p>
+        </div>
+    </div>
+</body>
+</html>

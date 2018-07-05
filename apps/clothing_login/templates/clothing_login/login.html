@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Clothing Dojo - Login</title>
+    {% load static %}
+    <link rel='stylesheet' type='text/css' href='{% static 'clothing_login/css/cdHeaderCSS.css' %}'>
+    <link rel='stylesheet' type='text/css' href='{% static 'clothing_login/css/cdLoginCSS.css' %}'>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href='{% static 'clothing_dojo/css/proxima_nova/fonts/fonts.css' %}'/>
+</head>
+<body>
+    <div class='wrapper'>
+        <div class='header'>
+            <img src='{% static 'clothing_admin/images/logo.png' %}'>
+            <p class='title'>Clothing Dojo</p>
+        </div>
+        <div class='body loginbox'>
+            <form class='login'action='processLogin/' method='POST'>
+                {% csrf_token %}
+                {% for message in reg_good %}
+                    <p class='green'>{{message}}</p>
+                {% endfor %}
+                <p class='big'>Login</p>
+                {% for message in login_main_errors %}
+                    <p class='red'>{{message}}</p>
+                {% endfor %}
+                <p>Email:</p>
+                {% for message in login_email_errors %}
+                    <p class='red'>{{message}}</p>
+                {% endfor %}
+                <input type='text' name='email' placeholder='email' value='{{login_email}}'>
+                <p>Password:</p>
+                <input type='password' name='password' placeholder='password'>
+                <div class='single_input'>
+                    <input type='checkbox' name='remember_me' value='remember' {{checked}}>
+                    <p>Remember Me</p>
+                </div>
+                <input type='submit' value='Log in' class='login'>
+                <p class='small'>Don't have an account yet?<br> <a href='register/'>Register now!</a></p>
+            </form>
+        </div>
+        <div class='footer'>
+            <p>Created by Ashwin Mahesh</p>
+            <p>*DISCLAIMER: Not a real e-commerce website*</p>
+        </div>
+    </div>
+</body>
+</html>
