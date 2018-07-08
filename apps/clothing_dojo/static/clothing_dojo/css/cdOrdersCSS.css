@@ -1,0 +1,12 @@
+div.body{
+    background:rgb(37,37,45);
+}
+div.wrapper{
+    background:linear-gradient(rgb(151,151,151), rgb(241,241,241));
+}
+p{
+    color:rgb(241,244,248);
+}
+table{
+    color:rgb(241,244,248);
+}

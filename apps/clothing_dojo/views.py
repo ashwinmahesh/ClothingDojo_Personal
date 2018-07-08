@@ -323,7 +323,10 @@ def processClaim(request):
 def viewOrders(request):
     print('Viewing orders')
     # return HttpResponse('Hello')
-    return render(request, 'clothing_dojo/clothingDojo_viewOrders.html')
+    context={
+        'user':User.objects.get(id=request.session['userID'])
+    }
+    return render(request, 'clothing_dojo/clothingDojo_viewOrders.html', context)
 
 def processPayment(request):
     if 'loggedIn' not in request.session:

@@ -26,7 +26,30 @@
             <a class='platform' href='/logout/'>LOG OUT</a>
             <p>Welcome, {{user.first_name}}</p>
         </div>
-        
+        <div class='body'>
+            
+                <table class='table'>
+                    <thead>
+                        <th>id</th>
+                        <th>total</th>
+                        <th>Cancel</th>
+                    </thead>
+                    <tbody>
+                        {% for order in user.orders.all %}
+                        <tr>
+                            <td>{{order.id}}</td>
+                            <td>${{order.total}}</td>
+                            <td>{% ifequal order.ordered False %}
+                                    <a href='#'>Cancel</a>
+                                {% endifequal %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    
+                </table>
+            
+        </div>
          <div class='footer'>
             <p>Created by Ashwin Mahesh</p>
             <p>*DISCLAIMER: Not a real e-commerce website*</p>
