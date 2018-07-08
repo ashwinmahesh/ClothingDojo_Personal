@@ -111,11 +111,16 @@ div.other_products{
     display:block;
     border:2px solid rgb(151,151,151);
     padding:10px 20px;
+    text-align:center;
 }
 div.other_products p{
     font-weight:bold;
     font-size:16pt;
     text-decoration:underline;
+    text-align:left;
+}
+div.other_product a{
+    display:inline-block;
 }
 div.other_products img{
     width:180px;

@@ -83,3 +83,12 @@ div.colors input.color{
     margin-top:10px;
     margin-bottom:15px;
 }
+div.wrapper p.red{
+    color:red;
+    margin:0px;
+    font-size:12pt;
+    font-style:italic;
+}
+div.wrapper p.big{
+    font-size:14pt;
+}

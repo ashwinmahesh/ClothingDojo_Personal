@@ -22,10 +22,16 @@
             <p>Clothing Dojo</p>
         </div>
         <p>Administrative Login</p>
+        {% for message in login_main_errors %}
+            <p class='big red'>{{message}}</p>
+        {% endfor %}
         <div class='login_box'>
             <form action='processLogin/' method='post'>
                 {% csrf_token %}
                 <p>Email:</p>
+                {% for message in login_email_errors %}
+                    <p class='red'>{{message}}</p>
+                {% endfor %}
                 <input type='text' name='email' placeholder='email'>
                 <p>Password: </p>
                 <input type='password' name='password' placeholder='password'>

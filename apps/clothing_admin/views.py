@@ -6,14 +6,34 @@ from djangounchained_flash import ErrorManager, getFromSession
 ORDERS_ON_PAGE=25
 
 def index(request):
-    return render(request, 'clothing_admin/admin_login.html')
+    if 'flash' not in request.session:
+        request.session['flash']=ErrorManager().addToSession()
+    e=getFromSession(request.session['flash'])
+    context={
+        "login_main_errors":e.getMessages('login_main'),
+        "login_email_errors":e.getMessages('login_email'),
+    }
+    request.session['flash']=e.addToSession()
+    return render(request, 'clothing_admin/admin_login.html', context)
     
 def processLogin(request):
     if(request.method!='POST'):
         print('Invalid entry attempted')
         return redirect('/admin')
-    print('Login attempted')
-    print('Allowing access for now')
+    e=getFromSession(request.session['flash'])
+    errors=User.objects.validate_login(request.POST)
+    if len(errors):
+        for tag,error in errors.items():
+            e.addMessage(error,tag)
+        request.session['flash']=e.addToSession()
+        return redirect('/admin')
+    if User.objects.get(email=request.POST['email']).user_level!=9:
+        e.addMessage("Account does not have admin privileges", "login_main")
+        request.session['flash']=e.addToSession()
+        return redirect('/admin')
+    request.session['flash']=e.addToSession()
+    request.session['userID']=User.objects.get(email=request.POST['email']).id
+    request.session['loggedIn']=True
     return redirect('/admin/login/')
 
 def login(request):
