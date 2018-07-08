@@ -6,8 +6,15 @@ from djangounchained_flash import ErrorManager, getFromSession
 ORDERS_ON_PAGE=25
 
 def index(request):
+    if 'adminLoggedIn' not in request.session:
+        request.session['adminLoggedIn']=False
+    if 'userID' not in request.session:
+        request.session['userID']=-1
     if 'flash' not in request.session:
         request.session['flash']=ErrorManager().addToSession()
+    if request.session['adminLoggedIn']==True and 'userID' in request.session and len(User.objects.filter(id=request.session['userID']))==1:
+        return redirect('/admin/orders/')
+
     e=getFromSession(request.session['flash'])
     context={
         "login_main_errors":e.getMessages('login_main'),
@@ -33,18 +40,44 @@ def processLogin(request):
         return redirect('/admin')
     request.session['flash']=e.addToSession()
     request.session['userID']=User.objects.get(email=request.POST['email']).id
+    request.session['adminLoggedIn']=True
     request.session['loggedIn']=True
     return redirect('/admin/login/')
 
 def login(request):
     if 'flash' not in request.session:
         request.session['flash']=ErrorManager().addToSession()
+    #Add below to all functions
+    if 'adminLoggedIn' not in request.session:
+        request.session['adminLoggedIn']=True
+    if 'userID' not in request.session:
+        return redirect('/admin')
+    if len(User.objects.filter(id=request.session['userID']))==0:
+        return redirect('/admin')
+    if request.session['adminLoggedIn']==False:
+        return redirect('/admin')
+    if User.objects.get(id=request.session['userID']).user_level!=9:
+        return redirect('/admin')
+    #end
     return redirect('/admin/orders/')
 
 def logout(request):
+    request.session['userID']=-1
+    request.session['adminLoggedIn']=False
+    request.session['loggedIn']=False
     return redirect('/admin')
 
 def orders(request):
+    if 'adminLoggedIn' not in request.session:
+        request.session['adminLoggedIn']=True
+    if 'userID' not in request.session:
+        return redirect('/admin')
+    if len(User.objects.filter(id=request.session['userID']))==0:
+        return redirect('/admin')
+    if request.session['adminLoggedIn']==False:
+        return redirect('/admin')
+    if User.objects.get(id=request.session['userID']).user_level!=9:
+        return redirect('/admin')
     orders=Order.objects.all().order_by('-created_at')
     num_pages=int(len(orders)/ORDERS_ON_PAGE)
     if(len(orders)%ORDERS_ON_PAGE!=0):
@@ -60,6 +93,17 @@ def orders(request):
     return render(request, 'clothing_admin/admin_orders.html', context)
 
 def products(request):
+    if 'adminLoggedIn' not in request.session:
+        request.session['adminLoggedIn']=True
+    if 'userID' not in request.session:
+        return redirect('/admin')
+    if len(User.objects.filter(id=request.session['userID']))==0:
+        return redirect('/admin')
+    if request.session['adminLoggedIn']==False:
+        return redirect('/admin')
+    if User.objects.get(id=request.session['userID']).user_level!=9:
+        return redirect('/admin')
+
     e=getFromSession(request.session['flash'])
     context={
         'product_success':e.getMessages('product_success'),
@@ -69,6 +113,17 @@ def products(request):
     return render(request, 'clothing_admin/admin_products.html', context)
 
 def addProduct(request):
+    if 'adminLoggedIn' not in request.session:
+        request.session['adminLoggedIn']=True
+    if 'userID' not in request.session:
+        return redirect('/admin')
+    if len(User.objects.filter(id=request.session['userID']))==0:
+        return redirect('/admin')
+    if request.session['adminLoggedIn']==False:
+        return redirect('/admin')
+    if User.objects.get(id=request.session['userID']).user_level!=9:
+        return redirect('/admin')
+
     if 'description' not in request.session:
         request.session['description']=''
     if 'price' not in request.session:
@@ -92,6 +147,17 @@ def addProduct(request):
     return render(request, 'clothing_admin/admin_addNew.html', context)
 
 def processNew(request):
+    if 'adminLoggedIn' not in request.session:
+        request.session['adminLoggedIn']=True
+    if 'userID' not in request.session:
+        return redirect('/admin')
+    if len(User.objects.filter(id=request.session['userID']))==0:
+        return redirect('/admin')
+    if request.session['adminLoggedIn']==False:
+        return redirect('/admin')
+    if User.objects.get(id=request.session['userID']).user_level!=9:
+        return redirect('/admin')
+
     if(request.method!='POST'):
         return redirect('/admin')
     print('Recieved Data: ', request.POST)
@@ -142,6 +208,17 @@ def processNew(request):
     return redirect('/admin/products/')
     
 def deleteProduct(request, product_id):
+    if 'adminLoggedIn' not in request.session:
+        request.session['adminLoggedIn']=True
+    if 'userID' not in request.session:
+        return redirect('/admin')
+    if len(User.objects.filter(id=request.session['userID']))==0:
+        return redirect('/admin')
+    if request.session['adminLoggedIn']==False:
+        return redirect('/admin')
+    if User.objects.get(id=request.session['userID']).user_level!=9:
+        return redirect('/admin')
+
     print('Deleting product ', product_id)
     if(len(Product.objects.filter(id=product_id))==0):
         print('Attempting to delete product that does not exist')
@@ -154,6 +231,17 @@ def deleteProduct(request, product_id):
     return redirect('/admin/products/')
 
 def editProduct(request, product_id):
+    if 'adminLoggedIn' not in request.session:
+        request.session['adminLoggedIn']=True
+    if 'userID' not in request.session:
+        return redirect('/admin')
+    if len(User.objects.filter(id=request.session['userID']))==0:
+        return redirect('/admin')
+    if request.session['adminLoggedIn']==False:
+        return redirect('/admin')
+    if User.objects.get(id=request.session['userID']).user_level!=9:
+        return redirect('/admin')
+
     if(len(Product.objects.filter(id=product_id))==0):
         print('Attempting to edit product that does not exist')
         return redirect('/admin/products/')
@@ -173,6 +261,17 @@ def editProduct(request, product_id):
     return render(request, 'clothing_admin/admin_editProduct.html', context)
 
 def processEdit(request, product_id):
+    if 'adminLoggedIn' not in request.session:
+        request.session['adminLoggedIn']=True
+    if 'userID' not in request.session:
+        return redirect('/admin')
+    if len(User.objects.filter(id=request.session['userID']))==0:
+        return redirect('/admin')
+    if request.session['adminLoggedIn']==False:
+        return redirect('/admin')
+    if User.objects.get(id=request.session['userID']).user_level!=9:
+        return redirect('/admin')
+
     if(request.method!='POST'):
         return redirect('/admin/products/')
     if(len(Product.objects.filter(id=product_id))==0):
@@ -221,6 +320,17 @@ def processEdit(request, product_id):
     return redirect('/admin/products/')
 
 def orderInfo(request, order_id):
+    if 'adminLoggedIn' not in request.session:
+        request.session['adminLoggedIn']=True
+    if 'userID' not in request.session:
+        return redirect('/admin')
+    if len(User.objects.filter(id=request.session['userID']))==0:
+        return redirect('/admin')
+    if request.session['adminLoggedIn']==False:
+        return redirect('/admin')
+    if User.objects.get(id=request.session['userID']).user_level!=9:
+        return redirect('/admin')
+
     if len(Order.objects.filter(id=order_id))==0:
         print('Attempting to view order that does not exist')
         return redirect('/admin/orders/')
@@ -231,6 +341,17 @@ def orderInfo(request, order_id):
     return render(request, 'clothing_admin/admin_orderInfo.html', context)
 
 def changeStatusAPI(request, order_id):
+    if 'adminLoggedIn' not in request.session:
+        request.session['adminLoggedIn']=True
+    if 'userID' not in request.session:
+        return redirect('/admin')
+    if len(User.objects.filter(id=request.session['userID']))==0:
+        return redirect('/admin')
+    if request.session['adminLoggedIn']==False:
+        return redirect('/admin')
+    if User.objects.get(id=request.session['userID']).user_level!=9:
+        return redirect('/admin')
+
     if(request.method!='POST'):
         return redirect('/admin/orders/')
     if(len(Order.objects.filter(id=order_id))==0):
@@ -242,6 +363,17 @@ def changeStatusAPI(request, order_id):
     return HttpResponse('Correctly Changed Status')
 
 def batchInfo(request):
+    if 'adminLoggedIn' not in request.session:
+        request.session['adminLoggedIn']=True
+    if 'userID' not in request.session:
+        return redirect('/admin')
+    if len(User.objects.filter(id=request.session['userID']))==0:
+        return redirect('/admin')
+    if request.session['adminLoggedIn']==False:
+        return redirect('/admin')
+    if User.objects.get(id=request.session['userID']).user_level!=9:
+        return redirect('/admin')
+
     e=getFromSession(request.session['flash'])
     context={
         'locations':Location.objects.all(),
@@ -251,6 +383,17 @@ def batchInfo(request):
     return render(request, 'clothing_admin/admin_batchInfo.html', context)
 
 def viewLocation(request, location_id):
+    if 'adminLoggedIn' not in request.session:
+        request.session['adminLoggedIn']=True
+    if 'userID' not in request.session:
+        return redirect('/admin')
+    if len(User.objects.filter(id=request.session['userID']))==0:
+        return redirect('/admin')
+    if request.session['adminLoggedIn']==False:
+        return redirect('/admin')
+    if User.objects.get(id=request.session['userID']).user_level!=9:
+        return redirect('/admin')
+
     if len(Location.objects.filter(id=location_id))==0:
         print('Attempting to access location that does not exist')
         return redirect('/admin/batchInfo/')
@@ -263,6 +406,17 @@ def viewLocation(request, location_id):
     return render(request, 'clothing_admin/admin_viewLocation.html', context)
 
 def viewBatch(request, batch_id):
+    if 'adminLoggedIn' not in request.session:
+        request.session['adminLoggedIn']=True
+    if 'userID' not in request.session:
+        return redirect('/admin')
+    if len(User.objects.filter(id=request.session['userID']))==0:
+        return redirect('/admin')
+    if request.session['adminLoggedIn']==False:
+        return redirect('/admin')
+    if User.objects.get(id=request.session['userID']).user_level!=9:
+        return redirect('/admin')
+
     if len(Batch.objects.filter(id=batch_id))==0:
         print('Attempting to access batch that does not exist')
         return redirect('/admin/batchInfo/')
@@ -278,6 +432,17 @@ def viewBatch(request, batch_id):
     return render(request,'clothing_admin/admin_viewBatch.html', context)
 
 def batchConfirm(request, batch_id):
+    if 'adminLoggedIn' not in request.session:
+        request.session['adminLoggedIn']=True
+    if 'userID' not in request.session:
+        return redirect('/admin')
+    if len(User.objects.filter(id=request.session['userID']))==0:
+        return redirect('/admin')
+    if request.session['adminLoggedIn']==False:
+        return redirect('/admin')
+    if User.objects.get(id=request.session['userID']).user_level!=9:
+        return redirect('/admin')
+
     if len(Batch.objects.filter(id=batch_id))==0:
         print('Attempting to access location that does not exist')
         return redirect('/admin/batchInfo/')
@@ -287,6 +452,17 @@ def batchConfirm(request, batch_id):
     return render(request,'clothing_admin/admin_batchConfirm.html', context)
 
 def finalizeBatch(request, batch_id):
+    if 'adminLoggedIn' not in request.session:
+        request.session['adminLoggedIn']=True
+    if 'userID' not in request.session:
+        return redirect('/admin')
+    if len(User.objects.filter(id=request.session['userID']))==0:
+        return redirect('/admin')
+    if request.session['adminLoggedIn']==False:
+        return redirect('/admin')
+    if User.objects.get(id=request.session['userID']).user_level!=9:
+        return redirect('/admin')
+
     if len(Batch.objects.filter(id=batch_id))==0:
         print('Attempting to access location that does not exist')
         return redirect('/admin/batchInfo/')
@@ -311,6 +487,8 @@ def finalizeBatch(request, batch_id):
     return redirect(string)
 
 def searchAPI(request):
+    if 'adminLoggedIn' not in request.session:
+        request.session['adminLoggedIn']=True
     if request.method!='POST':
         return HttpResponse('This is an API')
     print('You are searching')

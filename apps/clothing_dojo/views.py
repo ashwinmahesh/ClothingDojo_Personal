@@ -25,6 +25,7 @@ def logout(request):
         return redirect('/login/')
     if ('loggedIn' not in request.session):
         return redirect('/login/')
+    request.session['adminLoggedIn']=False
     remember=request.session['remember']
     log_em=request.session['login_email']
     request.session.clear()
