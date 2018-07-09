@@ -58,12 +58,17 @@ div.right ul li{
 div.right ul{
     margin-left:20px;
 }
-div.anchor{
-    display:block;
-    text-align:right;
-    margin-top:20px;
+div.holding_top{
+
 }
-div.body>div.anchor a{
+div.anchor{
+    /* display:block; */
+    /* text-align:right; */
+    float:right;
+    margin-top:20px;
+    vertical-align: top;
+}
+div.body div.anchor a{
     
     background:rgb(0,154,199);
     color:rgb(241,244,248);
@@ -79,12 +84,12 @@ div.body>div.anchor a{
     
     /* margin-right:25px; */
 }
-div.body>div.anchor a:hover{
+div.body div.anchor a:hover{
     background:rgb(0, 107, 139);
     color:rgb(187, 188, 189);
     text-decoration:none;
 }
-div.body> div.anchor a:active{
+div.body div.anchor a:active{
     border-right:1px transparent;
     border-bottom:1px transparent;
 }
@@ -101,15 +106,60 @@ p.red{
     font-style:italic;
 }
 p.page_name{
-    font-size:16pt;
+    font-size:18pt;
     color:rgb(241,244,248);
-    float:left;
+    /* float:left; */
     margin-top:20px;
-    margin-left:40px;
-    font-family: Arial, Helvetica, sans-serif;
-    text-decoration: underline;
+    margin-left:25px;
+    /* font-family: Arial, Helvetica, sans-serif; */
+    font-family: 'Proxima Nova', Georgia, sans-serif;
+    /* text-decoration: underline; */
     display:inline-block;
     width:fit-content;
+}
+div.desktop_summary table img{
+    width:60px;
+    height:70px;
+}
+div.desktop_summary{
+    width:550px;
+    display:inline-block;
+    text-align:left;
+    margin:0px;
+    /* border:1px solid red; */
+    margin-left:25px;
+}
+td{
+    color:rgb(241,244,248);
+    font-size:12pt;
+}
+tr:hover{
+    background:rgb(87, 87, 128);
+}
+th{
+    color:rgb(241,244,248);
+    font-size:13pt;
+}
+div.order_summary div.dekstop_summary table th{
+    color:rgb(241,244,248)
+}
+p.total{
+    font-family: 'Proxima Nova', Georgia, sans-serif;
+    color:rgb(241,244,248);
+    font-size:22pt;
+    border-top:1px solid rgb(241,244,248)
+}
+p.total:hover{
+    background:rgb(87, 87, 128)
+}
+p.med{
+    font-family: 'Proxima Nova', Georgia, sans-serif;
+    color:rgb(241,244,248);
+    font-size:13pt;
+}
+p.one{
+    padding-top:10px;
+    border-top:1px solid rgb(241,244,248)
 }
 
 @media only screen and (max-width:480px){
@@ -117,13 +167,27 @@ p.page_name{
         width:50px;
     }
 }
+@media only screen and (max-width:1023px){
+    div.desktop_summary{
+        display:none;
+    }
+}
 
 @media only screen and (min-width:1024px){
-    input.input_2{
-        width:50px;
+    
+    div.holding_form{
+        display:inline-block;
+        width:400px;
+        text-align:right;
     }
     div.rest_of_body{
-        text-align:center;
+        text-align: left;
+    }
+    div.right{
+        display:none;
+    }
+    input.input_2{
+        width:50px;
     }
     div.container{
         text-align:left;
@@ -133,16 +197,17 @@ p.page_name{
     }
     form{
         display:inline-block;
-        width:400px;
-        margin-left:35px;
+        width:330px;
+        margin-left:25px;
         margin-top:20px;
+        /* border:1px solid red; */
     }
     div.order_summary{
         text-align:left;
         display:inline-block;
         width:fit-content;
         vertical-align: top;
-        margin-right:35px;
+        margin-right:25px;
         margin-top:20px;
     }
 }

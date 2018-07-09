@@ -67,11 +67,13 @@
         </div>
 
         <div class='body'>
-            <p class='page_name'>Checkout</p>
-            <div class='anchor'>
-                <a href='/cart/'>BACK</a>
+            <div class='holding_top'>
+                <p class='page_name'>Checkout</p>
+                <!-- <p class='pg_name'>Checkout</p> -->
+                <div class='anchor'>
+                    <a href='/cart/'>BACK</a>
+                </div>
             </div>
-            
             <div class='rest_of_body'>
             <div class='order_summary'>
                 <div class='right'>
@@ -86,9 +88,40 @@
                     <p>Tax: NONE</p>
                     <p class='medium'>Total: ${{cart.total}}</p>
                 </div>
+                <div class='desktop_summary'>
+                    <table class='table'>
+                        <thead>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th>Color</th>
+                            <th>Size</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Item Total</th>
+                        </thead>
+                        <tbody>
+                            {% for item in cart.items.all %}
+                                <tr>
+                                    <td><a href='/product/{{item.product.id}}/'><img src='{{item.product.image_path}}' alt='Product image'></a></td>
+                                    <td>{{item.product.name}}</td>
+                                    <td>{{item.color.name}}</td>
+                                    <td>{{item.size}}</td>
+                                    <td>${{item.product.cost}}</td>
+                                    <td>{{item.quantity}}</td>
+                                    <td>${{item.total}}</td>
+                                </tr> 
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <p class ='med one'>Subtotal ({{count}} items): ${{cart.total}}</p>
+                    <p class='med'>Shipping: FREE</p>
+                    <p class='med'>Tax: NONE</p>
+                    <p class='total'>Total: ${{cart.total}}</p>
+                </div>
             </div>
 
-           
+
+           <div class='holding_form'>
             <form id='payment_form' action='/processPayment/' method='post'>
                 {% csrf_token %}
 
@@ -161,6 +194,7 @@
                     </div>
                 </div>
             </form>
+            </div>
             </div>
         </div>
         
