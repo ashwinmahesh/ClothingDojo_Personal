@@ -1,12 +1,84 @@
 div.body{
     background:rgb(37,37,45);
+    padding-bottom:1px;
+    padding-top:1px;
 }
 div.wrapper{
     background:linear-gradient(rgb(151,151,151), rgb(241,241,241));
+    min-width:525px;
 }
 p{
     color:rgb(241,244,248);
 }
 table{
     color:rgb(241,244,248);
+}
+p.page_title{
+    font-size:20pt;
+    margin-top:25px;
+    margin-left:25px;
+    font-weight:bold;
+}
+td img{
+    width:80px;
+    height:90px;
+}
+td{
+    font-size:13pt;
+}
+tr:hover{
+    background:rgb(87, 87, 128);
+}
+div.holding_table{
+    margin:20px 40px;
+}
+p.date_placed{
+    font-size:17pt;
+}
+span.bold{
+    font-weight:bold;
+}
+p.total{
+    border-top:1px solid rgb(241,244,248);
+    padding-top:10px;
+    font-size:18pt;
+}
+div.holding_table a{
+    background:rgb(255, 123, 0);
+    color:rgb(241,244,248);
+    font-size:16pt;
+    font-weight:bold;
+    padding:8px 20px;
+    text-decoration:none;
+    border-radius:8px;
+    border:1px solid maroon;
+}
+div.holding_table a:hover{
+    background:rgb(190, 92, 0);
+    color:rgb(182, 183, 185);
+}
+div.order_bottom{
+    margin-bottom:40px;
+}
+div.body a.back{
+    background:rgb(0,154,199);
+    color:rgb(241,244,248);
+    font-size:14pt;
+    padding:4px 20px;
+    border-radius:5px;
+    border-right:1px solid rgb(151,151,151);
+    border-bottom:1px solid rgb(151,151,151);
+    float:right;
+    text-decoration:none;
+    margin-top:25px;
+    margin-right:25px;
+}
+div.body a.back:hover{
+    background:rgb(0, 107, 139);
+    color:rgb(187, 188, 189);
+    text-decoration:none;
+}
+div.body a.back:active{
+    border-right:1px transparent;
+    border-bottom:1px transparent;
 }

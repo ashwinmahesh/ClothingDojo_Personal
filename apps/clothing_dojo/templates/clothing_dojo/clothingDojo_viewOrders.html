@@ -27,28 +27,43 @@
             <p>Welcome, {{user.first_name}}</p>
         </div>
         <div class='body'>
-            
-                <table class='table'>
-                    <thead>
-                        <th>id</th>
-                        <th>total</th>
-                        <th>Cancel</th>
-                    </thead>
-                    <tbody>
-                        {% for order in user.orders.all %}
-                        <tr>
-                            <td>{{order.id}}</td>
-                            <td>${{order.total}}</td>
-                            <td>{% ifequal order.ordered False %}
-                                    <a href='#'>Cancel</a>
-                                {% endifequal %}
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                    
-                </table>
-            
+            <a class='back' href='/'>BACK</a>
+            <p class='page_title'>Your Orders</p>
+            <div class='holding_table'>
+                {% for order in user.orders.all %}
+                    <p class='date_placed'><span class='bold'>Order Placed:</span> {{order.created_at}}</p>
+                    <table class='table'>
+                        <thead>
+                            <th>image</th>
+                            <th>Name</th>
+                            <th>Size</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Item Total</th>
+                        </thead>
+                        <tbody>
+                            {% for item in order.items.all %}
+                                <tr>
+                                    <td><img src='{{item.product.image_path}}' alt='Product_image'></td>
+                                    <td>{{item.product.name}}</td>
+                                    <td>{{item.size}}</td>
+                                    <td>${{item.product.cost}}</td>
+                                    <td>{{item.quantity}}</td>
+                                    <td>${{item.total}}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class='order_bottom'>
+                        <p class='total'><span class='bold'>Total:</span> ${{order.total}}</p>
+                        {% ifequal order.ordered False %}
+                            {% ifnotequal order.total 0 %}
+                                <a href='#'>Cancel</a>
+                            {% endifnotequal %}
+                        {% endifequal %}
+                    </div>
+                {% endfor %}
+            </div>
         </div>
          <div class='footer'>
             <p>Created by Ashwin Mahesh</p>

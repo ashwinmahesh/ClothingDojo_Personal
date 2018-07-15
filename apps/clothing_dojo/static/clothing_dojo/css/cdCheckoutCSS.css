@@ -138,7 +138,8 @@ tr:hover{
 }
 th{
     color:rgb(241,244,248);
-    font-size:13pt;
+    font-size:11pt;
+    font-weight:normal
 }
 div.order_summary div.dekstop_summary table th{
     color:rgb(241,244,248)
@@ -167,6 +168,7 @@ p.one{
         width:50px;
     }
 }
+
 @media only screen and (max-width:1023px){
     div.desktop_summary{
         display:none;

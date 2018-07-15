@@ -321,6 +321,12 @@ def processClaim(request):
     return redirect('/')
 
 def viewOrders(request):
+    if 'loggedIn' not in request.session:
+        return redirect('/login/')
+    if request.session['loggedIn']==False:
+        return redirect('/login/')
+    if 'userID' not in request.session:
+        return redirect('/login/')
     print('Viewing orders')
     # return HttpResponse('Hello')
     context={
